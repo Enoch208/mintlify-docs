@@ -1,0 +1,68 @@
+---
+title: "Authentication"
+description: "Authenticate every request with your SmartSend Organization ID."
+---
+
+The SmartSend Make.com API authenticates each request with a single header:
+
+```
+x-organization-id: <YOUR_ORGANIZATION_ID>
+```
+
+There are no separate API keys or tokens. Your **Organization ID** identifies your
+workspace and authorizes the request.
+
+<Warning>
+  Treat your Organization ID as a secret. Anyone who has it can send messages and
+  modify conversations in your workspace.
+</Warning>
+
+## Find your Organization ID
+
+Your Organization ID is the workspace identifier shown in the SmartSend app URL
+when a workspace is active:
+
+```
+https://app.smartsend.co.il/app/<organization-slug>/...
+```
+
+If you're not sure which ID to use, open the SmartSend dashboard, go to your
+workspace settings, or contact [support@smartsend.com](mailto:support@smartsend.com).
+
+## Verify it works
+
+Call the `validate` endpoint to confirm your Organization ID is correct and that
+WhatsApp is connected:
+
+<CodeGroup>
+
+```bash cURL
+curl https://smartsend-server.otherwise.co.il/integrations/make/validate \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+```json 200 OK
+{
+  "success": true,
+  "data": {
+    "organizationId": "org_123",
+    "organizationName": "Acme Inc.",
+    "whatsappConnected": true
+  }
+}
+```
+
+</CodeGroup>
+
+If you get `Organization not found`, double‑check the ID. If `whatsappConnected`
+is `false`, connect WhatsApp in the dashboard before sending messages.
+
+## Using it in Make.com
+
+When you set up a SmartSend module (or a generic **HTTP** module) in Make.com, add
+a header named `x-organization-id` with your Organization ID as the value. Every
+call in your scenario reuses it.
+
+<Card title="Next: send your first message" icon="rocket" href="/en/quickstart">
+  Go to the Quickstart.
+</Card>

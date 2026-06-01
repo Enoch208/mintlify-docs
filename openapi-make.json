@@ -1,0 +1,1595 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SmartSend Make.com API",
+    "version": "1.0.0",
+    "description": "Public HTTP API for the SmartSend Make.com integration. Every request is authenticated with the `x-organization-id` header. These are the endpoints Make.com (and any external automation tool) calls to send messages, manage conversations, tags, lists, custom fields, and more.",
+    "contact": {
+      "name": "SmartSend Support",
+      "email": "support@smartsend.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://smartsend-server.otherwise.co.il",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:3091",
+      "description": "Local development"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "organizationId": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-organization-id",
+        "description": "Your SmartSend Organization ID. Required on every request."
+      }
+    }
+  },
+  "security": [
+    {
+      "organizationId": []
+    }
+  ],
+  "paths": {
+    "/integrations/make/validate": {
+      "get": {
+        "summary": "Validate organization ID",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization validated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "organizationId": {
+                          "type": "string"
+                        },
+                        "organizationName": {
+                          "type": "string"
+                        },
+                        "whatsappConnected": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc-options": {
+      "get": {
+        "summary": "Get RPC options for make.com dropdowns",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RPC options retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "lists": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "users": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "bots": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/tags": {
+      "get": {
+        "summary": "Get tags for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tags retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/lists": {
+      "get": {
+        "summary": "Get lists for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/users": {
+      "get": {
+        "summary": "Get users for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/bots": {
+      "get": {
+        "summary": "Get bots for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bots retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/templates": {
+      "get": {
+        "summary": "Get templates for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Templates retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/custom-fields": {
+      "get": {
+        "summary": "Get custom fields for a specific list",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "listId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the list to get custom fields from"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom fields retrieved successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/flag-colors": {
+      "get": {
+        "summary": "Get available conversation flag colors for dropdown",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Flag colors retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/template-params": {
+      "get": {
+        "summary": "Get dynamic field definitions for a single approved template",
+        "description": "Returns flat field definitions for the dynamic parts of a single template — one entry per `{{N}}` body parameter, one per dynamic URL button (URL containing `{{1}}`), and one for the header media URL when the template has an IMAGE/VIDEO/DOCUMENT header. Used by the Make.com \"Send Template\" module to render dynamic fields once the user has picked a `templateName`.\nReturns an empty array when `templateName` is missing — Make.com's convention is \"no fields yet\" rather than an error before the user has chosen a template.\n",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "templateName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the approved template (from `/rpc/templates`)"
+          },
+          {
+            "in": "query",
+            "name": "languageCode",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional language code to disambiguate templates that exist in multiple languages (e.g. `he`, `en`)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template params retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Flat field name (e.g. `tp__1`, `tp__url_btn0`, `tp__header_media_url`)"
+                          },
+                          "label": {
+                            "type": "string",
+                            "description": "Human-readable label for the Make.com UI"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/rpc/bot-template-params": {
+      "get": {
+        "summary": "Get template parameters for all templates inside a bot flow",
+        "description": "Scans a bot flow for template nodes and returns the parameters each template expects. Used for dynamic fields in Make.com.",
+        "tags": [
+          "Make.com Integration - RPC"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "botId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the bot to scan for template parameters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bot template params retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "templateName": {
+                            "type": "string"
+                          },
+                          "language": {
+                            "type": "string"
+                          },
+                          "paramCount": {
+                            "type": "integer"
+                          },
+                          "params": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "index": {
+                                  "type": "integer"
+                                },
+                                "hint": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/resolve": {
+      "post": {
+        "summary": "Resolve or create a WhatsApp conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conversation resolved or created"
+          }
+        }
+      }
+    },
+    "/integrations/make/messages/send-text": {
+      "post": {
+        "summary": "Send a text message by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "message"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "sentByUserId": {
+                    "type": "string"
+                  },
+                  "sentByUserName": {
+                    "type": "string"
+                  },
+                  "replyToMessageId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/messages/send-template": {
+      "post": {
+        "summary": "Send a template message by phone number",
+        "description": "Templates can be sent anytime, even outside the 24-hour window",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "templateName"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "templateName": {
+                    "type": "string",
+                    "description": "Name of the approved WhatsApp template"
+                  },
+                  "languageCode": {
+                    "type": "string",
+                    "description": "Template language code (default 'he')"
+                  },
+                  "parameters": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Template parameters for variable substitution"
+                  },
+                  "sentByUserId": {
+                    "type": "string"
+                  },
+                  "sentByUserName": {
+                    "type": "string"
+                  },
+                  "headerMediaUrl": {
+                    "type": "string",
+                    "description": "Optional public URL for header media (image/video/document). Overrides the template's default media at send time."
+                  },
+                  "urlButtonParams": {
+                    "description": "Optional. Per-send values for dynamic URL buttons (URL contains `{{1}}` in the stored template). Two accepted shapes:\n  - Positional array: `[\"abc\", null, \"xyz\"]` (index = button position in template)\n  - Make.com Array of Collections: `[{ \"buttonIndex\": 0, \"value\": \"abc\" }, ...]`\nButtons not listed (or with null/empty value) fall back to Meta's example URL.\n",
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "buttonIndex",
+                            "value"
+                          ],
+                          "properties": {
+                            "buttonIndex": {
+                              "type": "integer",
+                              "description": "0-based index of the button in the template's buttons array"
+                            },
+                            "value": {
+                              "type": "string",
+                              "description": "The string that replaces `{{1}}` for this send"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template message sent successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/messages/send-template-base64": {
+      "post": {
+        "summary": "Send a template message with a base64 file",
+        "description": "Accepts a base64-encoded file, uploads it to CDN, then sends the template with the file as header media. Use this when you have file data (e.g. from Google Drive download) instead of a public URL.",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "templateName",
+                  "fileData",
+                  "fileName"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "templateName": {
+                    "type": "string",
+                    "description": "Name of the approved WhatsApp template"
+                  },
+                  "languageCode": {
+                    "type": "string",
+                    "description": "Template language code (default 'he')"
+                  },
+                  "parameters": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Template parameters for variable substitution"
+                  },
+                  "fileData": {
+                    "type": "string",
+                    "description": "Base64-encoded file content"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "description": "File name with extension (e.g. proposal.pdf)"
+                  },
+                  "sentByUserId": {
+                    "type": "string"
+                  },
+                  "sentByUserName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template message sent successfully with uploaded file"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/display-name": {
+      "post": {
+        "summary": "Update display name by phone number",
+        "description": "Sets a custom display name for the conversation. Creates the conversation if it doesn't exist.",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "displayName"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Custom display name (null to reset to profileName)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Display name updated successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/assign": {
+      "post": {
+        "summary": "Assign a user to a conversation by phone number",
+        "description": "Assigns the specified user to the conversation. By default this is a **replace** operation — every other user currently assigned is removed so only the target user remains. Set `replaceExisting: false` to **append** the user alongside existing assignments instead.\n",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "userId"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  },
+                  "replaceExisting": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When `true` (default), unassigns every other user before assigning the target user (replace). When `false`, leaves existing assignments intact and just adds the target user (append). If the target user is already assigned, this is a no-op.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User assigned successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/notes": {
+      "post": {
+        "summary": "Create a note on a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "content",
+                  "agentName"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "agentName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/tags/add": {
+      "post": {
+        "summary": "Add a tag to a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "tagId"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "tagId": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag added successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/tags/remove": {
+      "post": {
+        "summary": "Remove a specific tag from a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "tagId"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "tagId": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag removed successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/tags/clear": {
+      "post": {
+        "summary": "Clear all tags from a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tags cleared successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/lists/add": {
+      "post": {
+        "summary": "Add a list to a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "listId"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "listId": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List added successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/lists/clear": {
+      "post": {
+        "summary": "Clear all lists from a conversation by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "actorId": {
+                    "type": "string"
+                  },
+                  "actorName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lists cleared successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/lists/add-recipient": {
+      "post": {
+        "summary": "Add a recipient (phone number) to a list",
+        "description": "Adds a contact to an existing list. Creates conversation if needed.",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "listId",
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "listId": {
+                    "type": "string",
+                    "description": "ID of the list to add recipient to"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recipient added to list successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/set-custom-field": {
+      "post": {
+        "summary": "Set a custom field value on a conversation by phone number",
+        "description": "Sets or clears a value for one of the organization-level custom fields on a conversation. Creates the conversation if it doesn't exist. Identify the field with either `fieldId` (preferred, from `/rpc/custom-fields`) or `fieldName`. Pass `value: null` to clear the field.\n",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "fieldId": {
+                    "type": "string",
+                    "description": "ID of the custom field (from /rpc/custom-fields)"
+                  },
+                  "fieldName": {
+                    "type": "string",
+                    "description": "Name of the custom field (alternative to fieldId)"
+                  },
+                  "value": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Value to set. Pass null to clear."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom field set successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/set-custom-fields": {
+      "post": {
+        "summary": "Set multiple custom field values on a conversation by phone number",
+        "description": "Bulk variant of `/conversations/set-custom-field`. Accepts an array of `{ fieldId | fieldName, value }` items and applies them all in one call. Designed for the Make.com \"Array of Collections\" parameter type.\nEach item identifies its field with either `fieldId` (preferred, from `/rpc/custom-fields`) or `fieldName`. Pass `value: null` on an item to clear that field.\nThe whole batch is validated up front: if any item references an unknown field, the request fails before any updates are written.\n",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "fields"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "fields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "description": "One or more field updates to apply",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fieldId": {
+                          "type": "string",
+                          "description": "ID of the custom field (from /rpc/custom-fields)"
+                        },
+                        "fieldName": {
+                          "type": "string",
+                          "description": "Name of the custom field (alternative to fieldId)"
+                        },
+                        "value": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Value to set. Pass null to clear the field."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom fields updated successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/flag": {
+      "post": {
+        "summary": "Set or clear the colored flag on a conversation by phone number",
+        "description": "Pass color=null (or \"none\") to remove the flag. Creates the conversation if it doesn't exist.",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "color": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "red",
+                      "orange",
+                      "green",
+                      "none"
+                    ],
+                    "description": "Flag color to set. Use null or \"none\" to clear. Defaults to \"red\" when omitted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Flag updated successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/lists/remove-recipient": {
+      "post": {
+        "summary": "Remove a recipient (phone number) from a list",
+        "description": "Removes a contact from an existing list by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "listId",
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "listId": {
+                    "type": "string",
+                    "description": "ID of the list to remove recipient from"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recipient removed from list successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/flows/send": {
+      "post": {
+        "summary": "Trigger a bot flow by phone number",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "botId"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "botId": {
+                    "type": "string"
+                  },
+                  "buttonText": {
+                    "type": "string"
+                  },
+                  "templateParams": {
+                    "type": "object",
+                    "description": "Override template parameters per template name. Keys are template names, values are string arrays. Example: { \"order_confirmation\": [\"John\", \"ORD-123\"] }",
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Flow triggered successfully"
+          }
+        }
+      }
+    },
+    "/integrations/make/blacklist/add": {
+      "post": {
+        "summary": "Add a phone number to the blacklist",
+        "description": "Blacklist a phone number to prevent sending messages",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason for blacklisting"
+                  },
+                  "addedByName": {
+                    "type": "string",
+                    "description": "Name of person/system adding to blacklist"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Phone number added to blacklist"
+          }
+        }
+      }
+    },
+    "/integrations/make/blacklist/remove": {
+      "post": {
+        "summary": "Remove a phone number from the blacklist",
+        "description": "Remove a phone number from the blacklist to allow sending messages again",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number in any format (972..., 05..., +972...)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Phone number removed from blacklist"
+          }
+        }
+      }
+    },
+    "/integrations/make/notifications/push": {
+      "post": {
+        "summary": "Send a push notification to mobile-app users",
+        "description": "Triggers an Expo push notification to mobile-app users of the organization. Recipient resolution depends on `recipientType`:\n  - `user`         → the single `userId` provided\n  - `organization` → all distinct users in the org with active devices\n  - `phone`        → users currently assigned to the conversation matching `phoneNumber`\n\nWhen `respectPreferences` is true (default), the resolved list is filtered by each user's `NotificationPreference` (enabled / activeHours / assignedOnly).\nSound enum maps cross-platform: on iOS the file `cash.wav` (bundled in the app) is named in the payload; on Android the `cash` notification channel is targeted (the channel binds the sound resource).\n",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "security": [
+          {
+            "organizationId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recipientType",
+                  "title",
+                  "body"
+                ],
+                "properties": {
+                  "recipientType": {
+                    "type": "string",
+                    "enum": [
+                      "user",
+                      "organization",
+                      "phone"
+                    ],
+                    "description": "How to resolve the target users"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "Required when recipientType is \"user\" (from /rpc/users)"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Required when recipientType is \"phone\". Any format (972..., 05..., +972...)"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Notification title (capped to 200 chars)"
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Notification body (capped to 1000 chars)"
+                  },
+                  "sound": {
+                    "type": "string",
+                    "enum": [
+                      "default",
+                      "cash"
+                    ],
+                    "description": "Sound to play. Defaults to \"default\"."
+                  },
+                  "respectPreferences": {
+                    "type": "boolean",
+                    "description": "When true (default), apply the recipient's NotificationPreference filter (enabled, active hours, assigned-only)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Push notification queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "recipientType": {
+                          "type": "string"
+                        },
+                        "targetedUserIds": {
+                          "type": "integer"
+                        },
+                        "eligibleUserIds": {
+                          "type": "integer"
+                        },
+                        "deviceCount": {
+                          "type": "integer"
+                        },
+                        "tickets": {
+                          "type": "integer"
+                        },
+                        "note": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing/invalid input"
+          },
+          "404": {
+            "description": "No conversation found for phoneNumber (only when recipientType is \"phone\")"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

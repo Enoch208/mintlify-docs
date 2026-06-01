@@ -1,0 +1,71 @@
+---
+title: "SmartSend Make.com API"
+description: "Automate WhatsApp conversations, messages, tags, lists and more from Make.com or any HTTP client."
+---
+
+The **SmartSend Make.com API** is a public HTTP API for automating your SmartSend
+workspace from [Make.com](https://www.make.com) (formerly Integromat) — or from
+any tool that can send an HTTP request.
+
+Use it to send WhatsApp messages and templates, manage conversations, apply tags
+and lists, set custom fields, trigger bot flows, and manage your blacklist —
+all by phone number, without touching the SmartSend dashboard.
+
+<Note>
+  This reference covers the public `/integrations/make` endpoints only. These are
+  the **POST actions** Make.com calls to do work in your account, plus a few
+  read‑only helper lookups used to populate Make.com dropdowns. Internal
+  dashboard APIs are not part of this reference.
+</Note>
+
+## Base URL
+
+All requests go to the SmartSend backend:
+
+```
+https://smartsend-server.otherwise.co.il/integrations/make
+```
+
+## How it works
+
+<Steps>
+  <Step title="Authenticate with your Organization ID">
+    Every request includes the `x-organization-id` header. See [Authentication](/en/authentication).
+  </Step>
+  <Step title="Reference contacts by phone number">
+    You don't need internal conversation IDs. Endpoints accept a `phoneNumber`
+    (for example `972501234567`) and resolve the conversation for you.
+  </Step>
+  <Step title="Call an action endpoint">
+    Send a message, add a tag, assign an agent, set a custom field, and more —
+    each is a single `POST` request.
+  </Step>
+</Steps>
+
+## What you can automate
+
+<CardGroup cols={2}>
+  <Card title="Send messages" icon="paper-plane" href="/en/quickstart">
+    Free‑text messages and approved WhatsApp templates, by phone number.
+  </Card>
+  <Card title="Manage conversations" icon="comments">
+    Assign agents, set display names, add notes, flag, and resolve contacts.
+  </Card>
+  <Card title="Tags &amp; lists" icon="tags">
+    Add or remove tags, add contacts to distribution lists, manage recipients.
+  </Card>
+  <Card title="Custom fields &amp; bots" icon="robot">
+    Set custom fields, trigger bot flows, and manage your blacklist.
+  </Card>
+</CardGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/en/authentication">
+    Find your Organization ID and authenticate requests.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/en/quickstart">
+    Send your first WhatsApp message in three steps.
+  </Card>
+</CardGroup>

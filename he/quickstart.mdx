@@ -1,0 +1,97 @@
+---
+title: "התחלה מהירה"
+description: "שליחת הודעת הוואטסאפ הראשונה דרך ה‑API של SmartSend ל‑Make.com."
+---
+
+המדריך הזה שולח הודעת וואטסאפ לאיש קשר בשלושה שלבים. כל מה שצריך הוא
+[מזהה הארגון](/he/authentication) שלכם.
+
+## 1. אימות החשבון
+
+ודאו שמזהה הארגון תקין ושוואטסאפ מחובר:
+
+```bash
+curl https://smartsend-server.otherwise.co.il/integrations/make/validate \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+## 2. שליחת הודעת טקסט
+
+שליחת הודעת טקסט חופשי לפי מספר טלפון. כדי שהודעת טקסט חופשי תימסר, איש הקשר חייב
+להיות בתוך חלון שירות הלקוחות של 24 שעות בוואטסאפ — אחרת השתמשו
+[בתבנית](#3-שליחת-הודעת-תבנית).
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/messages/send-text \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "message": "שלום! תודה שפניתם אלינו 👋"
+  }'
+```
+
+```json גוף הבקשה
+{
+  "phoneNumber": "972501234567",
+  "message": "שלום! תודה שפניתם אלינו 👋"
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  השתמשו במספר הבינלאומי המלא של איש הקשר **ללא** `+` בהתחלה וללא אפסים — למשל
+  `972501234567`.
+</Tip>
+
+## 3. שליחת הודעת תבנית
+
+כדי להתחיל שיחה (או לשלוח מחוץ לחלון 24 השעות), שלחו תבנית וואטסאפ מאושרת לפי שם:
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/messages/send-template \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "templateName": "order_update",
+    "languageCode": "he",
+    "parameters": ["12345", "מחר"]
+  }'
+```
+
+השדה `parameters` ממלא את ה‑placeholders `{{1}}`, `{{2}}`… בגוף התבנית, לפי הסדר.
+
+## 4. הוספת תגית לשיחה
+
+ארגנו אנשי קשר על ידי הוספת תגית. את ה‑`tagId` מקבלים מהשאילתה `GET /rpc/tags`
+(שמשמשת גם למילוי הרשימות הנפתחות ב‑Make.com):
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/tags/add \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "tagId": "tag_abc123"
+  }'
+```
+
+## בנייה ב‑Make.com
+
+בתרחיש ב‑Make.com, הוסיפו מודול **HTTP → Make a request** (או מודול SmartSend אם
+זמין):
+
+1. **Method:** `POST`
+2. **URL:** נקודת הקצה, למשל `.../integrations/make/messages/send-text`
+3. **Headers:** `x-organization-id` = מזהה הארגון, `Content-Type` = `application/json`
+4. **Body:** ה‑JSON שמופיע למעלה
+
+## סקירת כל נקודות הקצה
+
+פתחו את קבוצת **Make.com API** בסרגל הצד כדי לעיין בכל הפעולות הזמינות — שליחת
+הודעות, ניהול תגיות, רשימות, שדות מותאמים, תהליכי בוט ורשימת חסומים — ולנסות כל
+אחת מהן במגרש המשחקים האינטראקטיבי.

@@ -6,16 +6,25 @@
 
 ## About this project
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
+- This is the **SmartSend API documentation** site, built on [Mintlify](https://mintlify.com)
+- It documents the public **Make.com integration API** (the `/integrations/make/*` endpoints) only
+- Pages are MDX files with YAML frontmatter; configuration lives in `docs.json`
+- The site is bilingual: **English** (`en/`) and **Hebrew** (`he/`, RTL). Keep both in sync
+- The API reference is auto‑generated from `openapi-make.json`. Do not hand‑edit that file —
+  it is produced by `smartsend-backend/scripts/gen-make-openapi.ts` from the Swagger JSDoc
+  annotations in `routes/make-integration.routes.ts`. Regenerate it when endpoints change
+- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query Mintlify usage
 
 ## Terminology
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+- Use **workspace** / **Organization ID** (not "account ID" or "tenant")
+- Use **contact** for the WhatsApp end user, **agent** for a SmartSend team member
+- Refer to the product as **SmartSend** (one word, camelCase)
+
+## Content boundaries
+
+- Document **only** the public `/integrations/make` endpoints (POST actions + the read‑only
+  `rpc/*` dropdown lookups). Do **not** document internal dashboard/proxy APIs
 
 ## Style preferences
 
@@ -26,8 +35,3 @@
 - Use sentence case for headings
 - Bold for UI elements: Click **Settings**
 - Code formatting for file names, commands, paths, and code references
-
-## Content boundaries
-
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}

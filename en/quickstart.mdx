@@ -1,0 +1,98 @@
+---
+title: "Quickstart"
+description: "Send your first WhatsApp message through the SmartSend Make.com API."
+---
+
+This guide sends a WhatsApp message to a contact in three steps. You only need
+your [Organization ID](/en/authentication).
+
+## 1. Validate your workspace
+
+Confirm your Organization ID works and WhatsApp is connected:
+
+```bash
+curl https://smartsend-server.otherwise.co.il/integrations/make/validate \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+## 2. Send a text message
+
+Send a free‑text message by phone number. The contact must be within the WhatsApp
+24‑hour customer service window for free‑text to deliver — otherwise use a
+[template](#3-send-a-template-message).
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/messages/send-text \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "message": "Hi! Thanks for reaching out 👋"
+  }'
+```
+
+```json Body
+{
+  "phoneNumber": "972501234567",
+  "message": "Hi! Thanks for reaching out 👋"
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  Use the contact's full international number **without** a leading `+` or zeros —
+  for example `972501234567`.
+</Tip>
+
+## 3. Send a template message
+
+To start a conversation (or message outside the 24‑hour window), send an approved
+WhatsApp template by name:
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/messages/send-template \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "templateName": "order_update",
+    "languageCode": "he",
+    "parameters": ["12345", "Tomorrow"]
+  }'
+```
+
+`parameters` fills the `{{1}}`, `{{2}}`… placeholders in the template body, in order.
+
+## 4. Tag the conversation
+
+Organize contacts by adding a tag. Get the `tagId` from the
+`GET /rpc/tags` helper (also used to populate Make.com dropdowns):
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/tags/add \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phoneNumber": "972501234567",
+    "tagId": "tag_abc123"
+  }'
+```
+
+## Build it in Make.com
+
+In a Make.com scenario, add an **HTTP → Make a request** module (or a SmartSend
+module if available):
+
+1. **Method:** `POST`
+2. **URL:** the endpoint, e.g. `.../integrations/make/messages/send-text`
+3. **Headers:** `x-organization-id` = your Organization ID, `Content-Type` = `application/json`
+4. **Body:** the JSON shown above
+
+## Explore every endpoint
+
+Open the **Make.com API reference** group in the sidebar to browse all available
+actions — sending messages, managing tags, lists, custom fields, bot flows, and
+the blacklist — and try each one in the interactive playground.

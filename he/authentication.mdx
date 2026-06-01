@@ -1,0 +1,64 @@
+---
+title: "אימות"
+description: "אימות כל בקשה באמצעות מזהה הארגון שלך ב‑SmartSend."
+---
+
+ה‑API של SmartSend ל‑Make.com מאמת כל בקשה באמצעות כותרת אחת:
+
+```
+x-organization-id: <מזהה_הארגון_שלך>
+```
+
+אין מפתחות API או טוקנים נפרדים. **מזהה הארגון** מזהה את החשבון שלך ומאשר את הבקשה.
+
+<Warning>
+  התייחסו למזהה הארגון כמו לסוד. כל מי שיש לו אותו יכול לשלוח הודעות ולשנות שיחות
+  בחשבון שלכם.
+</Warning>
+
+## איתור מזהה הארגון
+
+מזהה הארגון הוא המזהה שמופיע בכתובת של מערכת SmartSend כשהארגון פעיל:
+
+```
+https://app.smartsend.co.il/app/<organization-slug>/...
+```
+
+אם אינכם בטוחים באיזה מזהה להשתמש, היכנסו למערכת SmartSend, גשו להגדרות הארגון, או
+פנו אל [support@smartsend.com](mailto:support@smartsend.com).
+
+## בדיקה שהכול עובד
+
+קראו לנקודת הקצה `validate` כדי לוודא שמזהה הארגון נכון ושוואטסאפ מחובר:
+
+<CodeGroup>
+
+```bash cURL
+curl https://smartsend-server.otherwise.co.il/integrations/make/validate \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+```json 200 OK
+{
+  "success": true,
+  "data": {
+    "organizationId": "org_123",
+    "organizationName": "Acme Inc.",
+    "whatsappConnected": true
+  }
+}
+```
+
+</CodeGroup>
+
+אם מתקבלת השגיאה `Organization not found`, בדקו שוב את המזהה. אם הערך
+`whatsappConnected` הוא `false`, חברו את וואטסאפ במערכת לפני שליחת הודעות.
+
+## שימוש ב‑Make.com
+
+כשמגדירים מודול של SmartSend (או מודול **HTTP** כללי) ב‑Make.com, הוסיפו כותרת בשם
+`x-organization-id` עם מזהה הארגון כערך. כל קריאה בתרחיש תשתמש בו מחדש.
+
+<Card title="הבא: שליחת ההודעה הראשונה" icon="rocket" href="/he/quickstart">
+  מעבר להתחלה מהירה.
+</Card>
