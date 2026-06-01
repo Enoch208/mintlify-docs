@@ -544,8 +544,9 @@
                   "sentByUserName": {
                     "type": "string"
                   },
-                  "replyToMessageId": {
-                    "type": "string"
+                  "avoidBlacklist": {
+                    "type": "boolean",
+                    "description": "When true, the message is skipped (returns success with skipped=true) if the number is blacklisted."
                   }
                 }
               }
@@ -606,6 +607,10 @@
                   },
                   "sentByUserName": {
                     "type": "string"
+                  },
+                  "avoidBlacklist": {
+                    "type": "boolean",
+                    "description": "When true, the send is skipped if the number is blacklisted."
                   },
                   "headerMediaUrl": {
                     "type": "string",
@@ -843,8 +848,7 @@
                 "type": "object",
                 "required": [
                   "phoneNumber",
-                  "content",
-                  "agentName"
+                  "content"
                 ],
                 "properties": {
                   "phoneNumber": {
@@ -854,7 +858,8 @@
                     "type": "string"
                   },
                   "agentName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Optional. Name attributed to the note's author."
                   }
                 }
               }
@@ -1120,6 +1125,15 @@
                   "phoneNumber": {
                     "type": "string",
                     "description": "Phone number in any format (972..., 05..., +972...)"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Optional display name for the recipient."
+                  },
+                  "customFields": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Optional map of custom field values to store with the recipient."
                   }
                 }
               }
@@ -1420,6 +1434,10 @@
                   "reason": {
                     "type": "string",
                     "description": "Reason for blacklisting"
+                  },
+                  "addedBy": {
+                    "type": "string",
+                    "description": "ID of the person/system adding to the blacklist"
                   },
                   "addedByName": {
                     "type": "string",
