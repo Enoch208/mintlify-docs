@@ -1,0 +1,92 @@
+---
+title: "Members and assignees"
+description: "Get workspace members, remove one agent from a contact, or reset all assignments."
+---
+
+Use these commands from Make.com's **HTTP → Make a request** module or any HTTP client. Send your **Organization ID** in the `x-organization-id` header. Never share this value publicly.
+
+## Get members
+
+`GET /integrations/make/members` returns the agents in your workspace. Use the returned `userId` in assignment requests. This is the workspace member directory, not the agents assigned to one contact.
+
+```bash
+curl https://smartsend-server.otherwise.co.il/integrations/make/members \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+```json
+{
+  "success": true,
+  "message": "Members retrieved successfully",
+  "data": [
+    {
+      "userId": "user_123",
+      "fullName": "Example Agent",
+      "role": "member",
+      "email": "agent@example.com",
+      "phone": null
+    }
+  ]
+}
+```
+
+`phone` is `null` when not set. Unlike the `/integrations/make/rpc/users` dropdown lookup, this endpoint returns the full member details above. If the member directory is unavailable, the API returns `502`, not a successful empty list.
+
+## Remove one assignee
+
+`POST /integrations/make/conversations/unassign` removes the specified agent from the contact. Other agents remain assigned.
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/unassign \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"972501234567","userId":"user_123"}'
+```
+
+```json
+{
+  "success": true,
+  "message": "Assignee removed successfully",
+  "data": {
+    "conversationId": "conversation_123",
+    "userId": "user_123",
+    "unassignedCount": 1
+  }
+}
+```
+
+## Reset all assignees
+
+`POST /integrations/make/conversations/reset-assignees` removes every agent assignment from the contact.
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/reset-assignees \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"972501234567"}'
+```
+
+```json
+{
+  "success": true,
+  "message": "Assignees reset successfully",
+  "data": {
+    "conversationId": "conversation_123",
+    "unassignedCount": 2
+  }
+}
+```
+
+<Warning>
+  Reset removes all assignments, not just one. It does not delete agents, the contact, or messages.
+</Warning>
+
+## Safe retries and validation
+
+- Both actions return `200` with `unassignedCount: 0` when there is nothing to remove. An agent who is already unassigned is not an error.
+- If no conversation exists for the phone number, `conversationId` is `null` and `unassignedCount` is `0`. Neither action creates a conversation.
+- Use `phoneNumber`, or its alternative `phone`. If you send both, `phone` takes precedence.
+- Missing or invalid phone numbers return `400`. Removing one assignee also requires a non-empty `userId`.
+- The workspace comes from `x-organization-id`; use a `userId` from that workspace's member list.
+
+The **Make.com API reference** section contains the interactive request schemas for all three commands.

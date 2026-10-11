@@ -1,0 +1,92 @@
+---
+title: "חברי צוות ושיוך נציגים"
+description: "קבלת חברי הצוות, הסרת שיוך של נציג אחד או איפוס כל השיוכים של איש קשר."
+---
+
+אפשר להשתמש בפקודות במודול **HTTP → Make a request** של Make.com או בכל לקוח HTTP. שלחו את **מזהה הארגון** בכותרת `x-organization-id`. אין לשתף את הערך הזה בפומבי.
+
+## קבלת חברי הצוות
+
+`GET /integrations/make/members` מחזיר את הנציגים בסביבת העבודה. השתמשו ב־`userId` שהתקבל לבקשות שיוך. זו רשימת חברי הצוות בסביבת העבודה, ולא רשימת הנציגים המשויכים לאיש קשר מסוים.
+
+```bash
+curl https://smartsend-server.otherwise.co.il/integrations/make/members \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID"
+```
+
+```json
+{
+  "success": true,
+  "message": "Members retrieved successfully",
+  "data": [
+    {
+      "userId": "user_123",
+      "fullName": "Example Agent",
+      "role": "member",
+      "email": "agent@example.com",
+      "phone": null
+    }
+  ]
+}
+```
+
+כאשר לא הוגדר מספר טלפון, `phone` הוא `null`. בניגוד לשאילתת הרשימה הנפתחת `/integrations/make/rpc/users`, הפקודה מחזירה את פרטי חברי הצוות המוצגים למעלה. אם שירות חברי הצוות אינו זמין, מוחזרת שגיאת `502`, ולא רשימה ריקה עם תשובת הצלחה.
+
+## הסרת שיוך של נציג אחד
+
+`POST /integrations/make/conversations/unassign` מסיר את שיוך הנציג שצוין מאיש הקשר. השיוכים של שאר הנציגים נשארים ללא שינוי.
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/unassign \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"972501234567","userId":"user_123"}'
+```
+
+```json
+{
+  "success": true,
+  "message": "Assignee removed successfully",
+  "data": {
+    "conversationId": "conversation_123",
+    "userId": "user_123",
+    "unassignedCount": 1
+  }
+}
+```
+
+## איפוס כל שיוכי הנציגים
+
+`POST /integrations/make/conversations/reset-assignees` מסיר את כל שיוכי הנציגים מאיש הקשר.
+
+```bash
+curl -X POST https://smartsend-server.otherwise.co.il/integrations/make/conversations/reset-assignees \
+  -H "x-organization-id: YOUR_ORGANIZATION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"972501234567"}'
+```
+
+```json
+{
+  "success": true,
+  "message": "Assignees reset successfully",
+  "data": {
+    "conversationId": "conversation_123",
+    "unassignedCount": 2
+  }
+}
+```
+
+<Warning>
+  האיפוס מסיר את כל השיוכים, ולא רק שיוך אחד. הוא אינו מוחק נציגים, את איש הקשר או הודעות.
+</Warning>
+
+## ניסיונות חוזרים ואימות קלט
+
+- שתי הפעולות מחזירות `200` עם `unassignedCount: 0` כאשר אין שיוכים להסרה. נציג שכבר אינו משויך אינו גורם לשגיאה.
+- אם לא קיימת שיחה למספר הטלפון, `conversationId` הוא `null` ו־`unassignedCount` הוא `0`. הפעולות אינן יוצרות שיחה חדשה.
+- השתמשו ב־`phoneNumber` או בשדה החלופי `phone`. אם נשלחו שניהם, `phone` מקבל עדיפות.
+- מספר טלפון חסר או לא תקין מחזיר `400`. להסרת נציג אחד נדרש גם `userId` שאינו ריק.
+- סביבת העבודה נקבעת לפי `x-organization-id`. השתמשו ב־`userId` מתוך רשימת חברי הצוות של אותה סביבת עבודה.
+
+בקבוצת **Make.com API** בסרגל הצד מופיעות הסכמות האינטראקטיביות לשלוש הפקודות.

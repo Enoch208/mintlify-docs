@@ -22,7 +22,8 @@
             "pages": [
               "en/introduction",
               "en/authentication",
-              "en/quickstart"
+              "en/quickstart",
+              "en/members-and-assignees"
             ]
           },
           {
@@ -39,7 +40,8 @@
             "pages": [
               "he/introduction",
               "he/authentication",
-              "he/quickstart"
+              "he/quickstart",
+              "he/members-and-assignees"
             ]
           },
           {

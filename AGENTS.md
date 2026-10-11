@@ -10,9 +10,12 @@
 - It documents the public **Make.com integration API** (the `/integrations/make/*` endpoints) only
 - Pages are MDX files with YAML frontmatter; configuration lives in `docs.json`
 - The site is bilingual: **English** (`en/`) and **Hebrew** (`he/`, RTL). Keep both in sync
-- The API reference is auto‑generated from `openapi-make.json`. Do not hand‑edit that file —
-  it is produced by `smartsend-backend/scripts/gen-make-openapi.ts` from the Swagger JSDoc
-  annotations in `routes/make-integration.routes.ts`. Regenerate it when endpoints change
+- The API reference is auto‑generated from `openapi-make.json`. Do not hand‑edit that file.
+  Its original Swagger generator (`scripts/gen-make-openapi.ts`) was removed during the
+  backend monorepo migration. Member/assignee operations are maintained by the reproducible
+  overlay `node scripts/update-member-docs.mjs`; use `--check` to detect stale output.
+  Verify contracts against `smartsend-backend/packages/integrations/src/make/` before
+  changing the overlay. It preserves all unrelated operations in the existing specification.
 - Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query Mintlify usage
 
 ## Terminology
@@ -23,8 +26,8 @@
 
 ## Content boundaries
 
-- Document **only** the public `/integrations/make` endpoints (POST actions + the read‑only
-  `rpc/*` dropdown lookups). Do **not** document internal dashboard/proxy APIs
+- Document **only** the public `/integrations/make` endpoints (POST actions, the read-only
+  `/members` directory and `rpc/*` dropdown lookups). Do **not** document internal dashboard/proxy APIs
 
 ## Style preferences
 

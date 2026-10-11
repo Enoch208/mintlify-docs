@@ -1607,6 +1607,385 @@
           }
         }
       }
+    },
+    "/integrations/make/members": {
+      "get": {
+        "operationId": "getWorkspaceMembers",
+        "summary": "Get workspace members",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "description": "Return the agents in the workspace identified by x-organization-id. Use userId when assigning or removing an agent. This is the member directory, not a list of agents assigned to one contact. Unlike /rpc/users, it includes fullName, role, email and phone. An unavailable directory returns an error, not an empty success.",
+        "responses": {
+          "200": {
+            "description": "Members retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "userId",
+                          "fullName",
+                          "role",
+                          "email",
+                          "phone"
+                        ],
+                        "properties": {
+                          "userId": {
+                            "type": "string",
+                            "description": "Agent user ID. Use this value in assignment requests."
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Phone number, or null when not set."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Members retrieved successfully",
+                  "data": [
+                    {
+                      "userId": "user_123",
+                      "fullName": "Example Agent",
+                      "role": "member",
+                      "email": "agent@example.com",
+                      "phone": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "The member directory is unavailable or not configured. Retry later or contact support.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/unassign": {
+      "post": {
+        "operationId": "removeContactAssignee",
+        "summary": "Remove an agent from a contact",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "description": "Remove only the specified agent from the contact identified by phone number. Other assignments remain unchanged. Repeating the request, removing an agent who is not assigned, or using a phone number with no existing conversation returns HTTP 200 with unassignedCount: 0. This operation does not create a conversation or delete the agent.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId"
+                ],
+                "anyOf": [
+                  {
+                    "required": [
+                      "phoneNumber"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "phone"
+                    ]
+                  }
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Contact phone number. Use the full international number, for example 972501234567.",
+                    "example": "972501234567"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Alternative to phoneNumber. If both are supplied, phone takes precedence."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Agent user ID returned by GET /integrations/make/members."
+                  }
+                }
+              },
+              "example": {
+                "phoneNumber": "972501234567",
+                "userId": "user_123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignee removed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "conversationId",
+                        "userId",
+                        "unassignedCount"
+                      ],
+                      "properties": {
+                        "conversationId": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Existing conversation ID, or null if no conversation exists for this phone number."
+                        },
+                        "unassignedCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "Number of assignments removed. Zero is a successful no-op."
+                        },
+                        "userId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Assignee removed successfully",
+                  "data": {
+                    "conversationId": "conversation_123",
+                    "userId": "user_123",
+                    "unassignedCount": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid phone number or userId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/make/conversations/reset-assignees": {
+      "post": {
+        "operationId": "resetContactAssignees",
+        "summary": "Reset all assignees for a contact",
+        "tags": [
+          "Make.com Integration"
+        ],
+        "description": "Remove every agent assignment from the contact identified by phone number. The contact becomes unassigned; agents and messages are not deleted. If no assignments or conversation exist, return HTTP 200 with unassignedCount: 0. This operation does not create a conversation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "anyOf": [
+                  {
+                    "required": [
+                      "phoneNumber"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "phone"
+                    ]
+                  }
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Contact phone number. Use the full international number, for example 972501234567.",
+                    "example": "972501234567"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Alternative to phoneNumber. If both are supplied, phone takes precedence."
+                  }
+                }
+              },
+              "example": {
+                "phoneNumber": "972501234567"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignees reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "conversationId",
+                        "unassignedCount"
+                      ],
+                      "properties": {
+                        "conversationId": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Existing conversation ID, or null if no conversation exists for this phone number."
+                        },
+                        "unassignedCount": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "Number of assignments removed. Zero is a successful no-op."
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Assignees reset successfully",
+                  "data": {
+                    "conversationId": "conversation_123",
+                    "unassignedCount": 2
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid phone number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "tags": []
